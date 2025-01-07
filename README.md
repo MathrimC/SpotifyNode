@@ -11,6 +11,7 @@ A Godot addon for easy interfacing with Spotify from GDScript.
 
 ## Install
 Clone the project or download the zip file. Copy the files and folders to your project folder. Make sure they are in the root directory of your project.
+
 ![project_folder](./documentation/spotify_node_project_folder.png)
 
 ## Getting started
@@ -22,7 +23,7 @@ The easiest way to get started is to use the provided auth window scene:
 3) Choose the Authorization Grant Type:
     - If you are making a client-side application, or any application that doesn't only run on your own device, choose the `Auth code PKCE`.
     - If you're making a server-side application running on your own server, you can also choose the `Auth code`.
-If you're not sure which one to pick, choose `Auth code PKCE` (this doesn't require local storage of an application wide client secret and so is the more secure option).
+    - If you're not sure which one to pick, choose `Auth code PKCE` (this doesn't require local storage of an application wide client secret and so is the more secure option).
 4) Copy the client id of your application from the Spotify Developer Dashboard to the `Application Client ID` field. If you're not using the PKCE flow, also copy the client secret from the dashboard to the `Application Client Secret` field.
 5) Click the `Create New Code` button next to `Authorization Code`. A browser tab will open, showing you info about the scope of the token. Click `Agree`.
 
