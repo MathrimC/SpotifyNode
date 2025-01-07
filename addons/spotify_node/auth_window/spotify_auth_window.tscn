@@ -1,0 +1,159 @@
+[gd_scene load_steps=5 format=3 uid="uid://sgiampakcaer"]
+
+[ext_resource type="Script" path="res://addons/spotify_node/auth_window/spotify_auth_window.gd" id="1_ig64g"]
+[ext_resource type="Script" path="res://addons/spotify_node/auth_window/spotify_auth.gd" id="2_6ldlh"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hyf55"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hfv6g"]
+
+[node name="SpotifyAuthWindow" type="Window" node_paths=PackedStringArray("spotify_auth")]
+auto_translate_mode = 1
+title = "Spotify Credentials"
+initial_position = 2
+size = Vector2i(640, 400)
+min_size = Vector2i(600, 400)
+script = ExtResource("1_ig64g")
+spotify_auth = NodePath("PanelContainer/SpotifyAuth")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+self_modulate = Color(0.117235, 0.843183, 0.376638, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hyf55")
+
+[node name="SpotifyAuth" type="MarginContainer" parent="PanelContainer" node_paths=PackedStringArray("auth_type_dropdown", "application_id_input", "application_secret_container", "application_secret_input", "authorization_code_input", "authorization_code_button", "status_label", "status_icon", "help_label")]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+script = ExtResource("2_6ldlh")
+auth_type_dropdown = NodePath("VBoxContainer/GrantType/GrantTypeDropdown")
+application_id_input = NodePath("VBoxContainer/ClientId/ClientIdInput")
+application_secret_container = NodePath("VBoxContainer/ClientSecret")
+application_secret_input = NodePath("VBoxContainer/ClientSecret/ClientSecretInput")
+authorization_code_input = NodePath("VBoxContainer/AuthorizationCode/AuthorizationCodeInput")
+authorization_code_button = NodePath("VBoxContainer/AuthorizationCode/Button")
+status_label = NodePath("VBoxContainer/Status/StatusLabel")
+status_icon = NodePath("VBoxContainer/Status/StatusIcon")
+help_label = NodePath("VBoxContainer/MarginContainer/RichTextLabel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/SpotifyAuth"]
+layout_mode = 2
+
+[node name="GrantType" type="HBoxContainer" parent="PanelContainer/SpotifyAuth/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/SpotifyAuth/VBoxContainer/GrantType"]
+custom_minimum_size = Vector2(230, 0)
+layout_mode = 2
+text = "Authorization Grant Type"
+
+[node name="GrantTypeDropdown" type="OptionButton" parent="PanelContainer/SpotifyAuth/VBoxContainer/GrantType"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/align_to_largest_stylebox = 0
+selected = 1
+fit_to_longest_item = false
+item_count = 2
+popup/item_0/text = "Auth code"
+popup/item_1/text = "Auth code PKCE"
+popup/item_1/id = 1
+
+[node name="ClientId" type="HBoxContainer" parent="PanelContainer/SpotifyAuth/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/SpotifyAuth/VBoxContainer/ClientId"]
+custom_minimum_size = Vector2(230, 0)
+layout_mode = 2
+text = "Application Client ID *"
+
+[node name="ClientIdInput" type="LineEdit" parent="PanelContainer/SpotifyAuth/VBoxContainer/ClientId"]
+layout_mode = 2
+size_flags_horizontal = 3
+caret_blink = true
+secret = true
+
+[node name="ClientSecret" type="HBoxContainer" parent="PanelContainer/SpotifyAuth/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/SpotifyAuth/VBoxContainer/ClientSecret"]
+custom_minimum_size = Vector2(230, 0)
+layout_mode = 2
+text = "Application Client Secret *"
+
+[node name="ClientSecretInput" type="LineEdit" parent="PanelContainer/SpotifyAuth/VBoxContainer/ClientSecret"]
+layout_mode = 2
+size_flags_horizontal = 3
+caret_blink = true
+secret = true
+
+[node name="AuthorizationCode" type="HBoxContainer" parent="PanelContainer/SpotifyAuth/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/SpotifyAuth/VBoxContainer/AuthorizationCode"]
+custom_minimum_size = Vector2(230, 0)
+layout_mode = 2
+text = "Authorization Code"
+
+[node name="AuthorizationCodeInput" type="LineEdit" parent="PanelContainer/SpotifyAuth/VBoxContainer/AuthorizationCode"]
+visible = false
+modulate = Color(0.415717, 0.744991, 0.188067, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+secret = true
+
+[node name="Button" type="Button" parent="PanelContainer/SpotifyAuth/VBoxContainer/AuthorizationCode"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Create New Code"
+
+[node name="Status" type="HBoxContainer" parent="PanelContainer/SpotifyAuth/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/SpotifyAuth/VBoxContainer/Status"]
+custom_minimum_size = Vector2(230, 0)
+layout_mode = 2
+text = "Status"
+
+[node name="StatusLabel" type="Label" parent="PanelContainer/SpotifyAuth/VBoxContainer/Status"]
+layout_mode = 2
+text = "Valid"
+
+[node name="StatusIcon" type="TextureRect" parent="PanelContainer/SpotifyAuth/VBoxContainer/Status"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/SpotifyAuth/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/margin_top = 18
+
+[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/SpotifyAuth/VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 2
+theme_override_font_sizes/normal_font_size = 14
+theme_override_styles/focus = SubResource("StyleBoxEmpty_hfv6g")
+bbcode_enabled = true
+fit_content = true
+selection_enabled = true
+
+[node name="Button" type="Button" parent="PanelContainer/SpotifyAuth"]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+text = "Close"
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="item_selected" from="PanelContainer/SpotifyAuth/VBoxContainer/GrantType/GrantTypeDropdown" to="PanelContainer/SpotifyAuth" method="on_auth_type_selected"]
+[connection signal="text_changed" from="PanelContainer/SpotifyAuth/VBoxContainer/ClientId/ClientIdInput" to="PanelContainer/SpotifyAuth" method="on_client_id_changed"]
+[connection signal="text_changed" from="PanelContainer/SpotifyAuth/VBoxContainer/ClientSecret/ClientSecretInput" to="PanelContainer/SpotifyAuth" method="on_client_secret_changed"]
+[connection signal="text_changed" from="PanelContainer/SpotifyAuth/VBoxContainer/AuthorizationCode/AuthorizationCodeInput" to="PanelContainer/SpotifyAuth" method="on_authorization_code_changed"]
+[connection signal="pressed" from="PanelContainer/SpotifyAuth/VBoxContainer/AuthorizationCode/Button" to="PanelContainer/SpotifyAuth" method="on_authorization_code_button_pressed"]
+[connection signal="meta_clicked" from="PanelContainer/SpotifyAuth/VBoxContainer/MarginContainer/RichTextLabel" to="PanelContainer/SpotifyAuth" method="open_dev_dashboard"]
+[connection signal="pressed" from="PanelContainer/SpotifyAuth/Button" to="." method="_on_close_requested"]
