@@ -259,7 +259,6 @@ func _refresh_token(lifetime: int = 0) -> void:
 		await get_tree().create_timer(lifetime - 60).timeout
 	while true:
 		auth_state = SpotifyNode.AuthState.REFRESHING
-		print("refreshing token")
 		spotify_node.auth_state_changed.emit(auth_state)
 		var body := {
 			"grant_type": "refresh_token",
@@ -278,14 +277,12 @@ func _refresh_token(lifetime: int = 0) -> void:
 				_store_credentials()
 			auth_state = SpotifyNode.AuthState.VALID
 			spotify_node.auth_state_changed.emit(auth_state)
-			print("token refreshed")
 			await get_tree().create_timer(lifetime - 60).timeout
 		else:
 			token_refresh_running = false
 			printerr("Error refreshing token")
 			auth_state = SpotifyNode.AuthState.INVALID
 			spotify_node.auth_state_changed.emit(auth_state)
-			print("token refresh failed")
 			break
 
 func get_client_id() -> String:
@@ -337,7 +334,6 @@ func set_credentials(auth_type: SpotifyNode.AuthType, client_id: String, client_
 	else:
 		encrypted_credentials["client_secret"] = []
 	if authorization_code != "":
-		# encrypted_credentials["authorization_code"] = crypto.encrypt(key, authorization_code.to_utf8_buffer())
 		var lifetime := await _request_token(authorization_code)
 		if !token_refresh_running:
 			_refresh_token(lifetime)

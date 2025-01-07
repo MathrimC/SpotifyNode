@@ -1,3 +1,6 @@
+@icon("./icons/Spotify_Logo_Green.svg")
+
+## Provides funtions and signals for interacting with the Spotify Web API
 class_name SpotifyNode
 extends Node
 

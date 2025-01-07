@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cb15liyt827ov"]
+[gd_scene load_steps=4 format=3 uid="uid://cb15liyt827ov"]
 
 [ext_resource type="Script" path="res://example/music_player.gd" id="1_h1v1n"]
 [ext_resource type="Script" path="res://addons/spotify_node/spotify_node.gd" id="2_nesis"]
+[ext_resource type="Texture2D" uid="uid://bg8g33ta1bhdv" path="res://example/Full_Logo_Green_RGB.svg" id="3_vw0yt"]
 
 [node name="MusicPlayer" type="Control"]
 layout_mode = 3
@@ -48,8 +49,15 @@ theme_override_constants/separation = 5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 8
 theme_override_constants/separation = 10
+
+[node name="TextureButton" type="TextureButton" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+texture_normal = ExtResource("3_vw0yt")
+ignore_texture_size = true
+stretch_mode = 4
 
 [node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -133,6 +141,7 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/TextureButton" to="MusicPlayerController" method="_on_spotify_button_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Auth" to="MusicPlayerController" method="_on_auth_settings_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/Buttons/Previous" to="MusicPlayerController" method="_on_previous_pressed"]
 [connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/Buttons/Play" to="MusicPlayerController" method="_on_play_pressed"]
