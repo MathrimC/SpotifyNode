@@ -42,7 +42,7 @@ func _on_progress(_progress: int, _duration: int) -> void:
 	progress_bar.value = _progress
 	progress_bar.max_value = _duration
 
-func _on_item_paused(_paused: bool):
+func _on_item_paused(_paused: bool) -> void:
 	paused = _paused
 	play_button.text = ">" if paused else "||"
 
@@ -67,7 +67,7 @@ func _on_search_button_pressed() -> void:
 	var search_results := await spotify_node.search(search_input.text, [SpotifyNode.ItemType.TRACK])
 	if search_results.is_empty():
 		return
-	for item in search_results["tracks"]["items"]:
+	for item: Dictionary in search_results["tracks"]["items"]:
 		var search_result: SearchResult = search_result_scene.instantiate()
 		search_result.item = item
 		search_result.music_player_controller = self
@@ -83,12 +83,12 @@ func _on_search_and_add_pressed() -> void:
 	_refresh_queue()
 
 func add_search_result_to_queue(item: Dictionary) -> void:
-	await spotify_node.add_item_to_queue_by_uri(item["uri"])
+	await spotify_node.add_item_to_queue_by_uri(str(item["uri"]))
 	_refresh_queue()
 
 func _refresh_queue() -> void:
 	var queue_position: int = 0
-	for item in await spotify_node.get_queue():
+	for item: Dictionary in await spotify_node.get_queue():
 		if queue_position < queue_labels.size():
 			queue_labels[queue_position].text = "%s. %s - %s" % [queue_position + 1, item["name"], item["artists"][0]["name"]]
 		else:
@@ -98,7 +98,8 @@ func _refresh_queue() -> void:
 			queue_labels.append(label)
 		queue_position += 1
 	while queue_position < queue_labels.size():
-		queue_labels[queue_position].pop_back().queue_free()
+		var label: Label = queue_labels.pop_back()
+		label.queue_free()
 
 func _on_spotify_button_pressed() -> void:
 	OS.shell_open("https://open.spotify.com/")
