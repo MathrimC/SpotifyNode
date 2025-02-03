@@ -14,6 +14,8 @@ const search_result_scene := preload("res://example/search_result.tscn")
 @export var queue_container: Container
 @export var search_results_container: Container
 @export var status_label: Label
+@export var album_rect: TextureRect
+@export var artist_rect: TextureRect
 
 var paused: bool = true
 var search_results_lines: Array[SearchResult]
@@ -34,8 +36,17 @@ func _process(delta: float) -> void:
 func _on_item_changed(new_item: Dictionary) -> void:
 	if !new_item.is_empty():
 		info_label.text = "%s - %s" % [new_item["name"], new_item["artists"][0]["name"]]
+		var album_image_url: String
+		var album_info: Dictionary = new_item["album"]
+		var album_images: Array = album_info.get("images", [])
+		if !album_images.is_empty():
+			album_image_url = album_images[0]["url"]
+		_update_album_image(album_image_url)
+		var artist_id: String = new_item["artists"][0]["id"]
+		_update_artist_image(artist_id)
 	else:
 		info_label.text = ""
+		_update_artist_image("")
 	_refresh_queue()
 
 func _on_progress(_progress: int, _duration: int) -> void:
@@ -121,3 +132,40 @@ func _on_auth_state_changed(_auth_state: SpotifyNode.AuthState) -> void:
 		_:
 			status_label.text = "Disconnected"
 			status_label.self_modulate = Color.RED
+
+func _update_artist_image(artist_id: String) -> void:
+	if artist_id == "":
+		artist_rect.texture = null
+		return
+	var artist_info := await spotify_node.get_artist(artist_id)
+	var images: Array = artist_info.get("images", {})
+	if images.is_empty():
+		printerr("Can't find images for artist id %s" % artist_id)
+		artist_rect.texture = null
+		return
+	var url: String = images[0]["url"]
+	artist_rect.texture = ImageTexture.create_from_image(await _get_image_from_url(url))
+
+func _update_album_image(image_url: String) -> void:
+	album_rect.texture = ImageTexture.create_from_image(await _get_image_from_url(image_url))
+
+
+func _get_image_from_url(url: String) -> Image:
+	var request := HTTPRequest.new()
+	request.use_threads = true
+	add_child(request)
+	request.request(url, [], HTTPClient.METHOD_GET)
+	var result: Array = await request.request_completed
+	request.queue_free()
+	if result.is_empty() || result.size() < 4 || result[0] != 0 || result[1] < 200 || result[1] > 299:
+		printerr("Error retrieving image from url %s" % url)
+		artist_rect.texture = null
+		return
+	var image_buffer: PackedByteArray = result[3]
+	if image_buffer.is_empty():
+		printerr("Error retrieving image from url %s" % url)
+		artist_rect.texture = null
+		return
+	var image := Image.new()
+	image.load_jpg_from_buffer(image_buffer)
+	return image
