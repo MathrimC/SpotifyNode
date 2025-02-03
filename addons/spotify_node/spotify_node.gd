@@ -110,14 +110,17 @@ func get_current_playlist_uri() -> String:
 		return ""
 
 func get_current_playlist_info() -> Dictionary:
-	return await get_playlist_info(await get_current_playlist_uri())
+	var playlist_uri := await get_current_playlist_uri()
+	print("playlist uri: %s" % playlist_uri)
+	if playlist_uri != "":
+		playlist_uri = playlist_uri.trim_prefix("spotify:playlist:")
+		return await get_playlist_info(playlist_uri)
+	else:
+		return {}
 
 func get_current_user_playlists() -> Array:
 	var playlists := await _spotify_api.get_current_user_playlists()
-	if !playlists.is_empty():
-		return playlists["items"]
-	else:
-		return []
+	return playlists
 
 func get_user_playlists() -> Array:
 	if user_id == "":
@@ -144,17 +147,21 @@ func get_current_user_profile() -> Dictionary:
 func search(query: String, types: Array[SpotifyNode.ItemType]) -> Dictionary:
 	return await _spotify_api.search(query, types, 50)
 
+func get_artist(artist_id: String) -> Dictionary:
+	return await _spotify_api.get_artist(artist_id)
+
 func _update_playback_state(new_state: Dictionary) -> void:
-	if new_state.is_empty():
+	var previous_state := playback_state
+	playback_state = new_state
+	if new_state.is_empty() || new_state.get("item", {}).is_empty():
 		new_state = {"is_playing": false, "item": {"id": ""}}
-	if new_state["is_playing"] != playback_state["is_playing"]:
+	if new_state["is_playing"] != previous_state["is_playing"]:
 		playback_item_paused.emit(!new_state["is_playing"])
-	if new_state["item"]["id"] != playback_state["item"]["id"]:
+	if new_state["item"]["id"] != previous_state["item"]["id"]:
 		var item: Dictionary = new_state["item"]
 		playback_item_changed.emit(item)
 	if new_state["is_playing"]:
 		playback_item_progress_update.emit(new_state["progress_ms"],new_state["item"]["duration_ms"])
-	playback_state = new_state
 
 func get_auth_state() -> AuthState:
 	return _spotify_api.auth_state

@@ -27,7 +27,7 @@ func track_playback_state() -> void:
 		if auth_state == SpotifyNode.AuthState.VALID:
 			var state := await get_playback_state()
 			spotify_node._update_playback_state(state)
-			var wait_time_ms: int = (spotify_node.playing_refresh_time_s if spotify_node.playback_state["is_playing"] else spotify_node.paused_refresh_time_s) * 1000 - (Time.get_ticks_msec() - timestamp)
+			var wait_time_ms: int = (spotify_node.playing_refresh_time_s if !state.is_empty() && state["is_playing"] else spotify_node.paused_refresh_time_s) * 1000 - (Time.get_ticks_msec() - timestamp)
 			if wait_time_ms > 0:
 				await get_tree().create_timer(wait_time_ms / 1000.).timeout
 		else:
@@ -35,7 +35,10 @@ func track_playback_state() -> void:
 
 func get_playback_state() -> Dictionary:
 	var result := await _execute_request("%s/me/player" % base_url, HTTPClient.METHOD_GET)
-	return _get_response_body(result)
+	var body := _get_response_body(result)
+	if body.is_empty():
+		body = { "is_playing": false, "item": { "id": "" } }
+	return body
 
 func get_available_devices() -> Array:
 	var result := await _execute_request("%s/me/player/devices" % base_url, HTTPClient.METHOD_GET)
@@ -124,12 +127,22 @@ func add_item_to_queue(request_uri: String, device_id: String = "") -> bool:
 	var result := await _execute_request("%s/me/player/queue?%s" % [base_url, http_client.query_string_from_dict(query_parameters)], HTTPClient.METHOD_POST, "{}")
 	return _is_successfull(result)
 
-func get_current_user_playlists() -> Dictionary:
-	var query_parameters := {
-		"limit" : 50,
-	}
-	var result := await _execute_request("%s/me/playlists?%s" % [base_url, http_client.query_string_from_dict(query_parameters)], HTTPClient.METHOD_GET)
-	return _get_response_body(result)
+func get_current_user_playlists() -> Array:
+	var playlists := []
+	var total := 1
+	while total > playlists.size():
+		var query_parameters := {
+			"limit" : 50,
+			"offset" : playlists.size()
+		}
+		var result := await _execute_request("%s/me/playlists?%s" % [base_url, http_client.query_string_from_dict(query_parameters)], HTTPClient.METHOD_GET)
+		var response := _get_response_body(result)
+		if !response.is_empty():
+			total = response["total"]
+			playlists.append_array(response["items"])
+		else:
+			total = 0
+	return playlists
 
 func get_user_playlists(user_id: String) -> Dictionary:
 	var query_parameters := {
@@ -140,10 +153,7 @@ func get_user_playlists(user_id: String) -> Dictionary:
 
 func get_playlist(playlist_id: String) -> Dictionary:
 	var result := await _execute_request("%s/playlists/%s" % [base_url, playlist_id], HTTPClient.METHOD_GET)
-	if _is_successfull(result):
-		return _get_response_body(result)
-	else:
-		return {}
+	return _get_response_body(result)
 
 func search(query: String, types: Array[SpotifyNode.ItemType], limit: int = 50) -> Dictionary:
 	if query == "":
@@ -159,6 +169,10 @@ func search(query: String, types: Array[SpotifyNode.ItemType], limit: int = 50) 
 
 func get_user_profile() -> Dictionary:
 	var result := await _execute_request("%s/me" % base_url, HTTPClient.METHOD_GET)
+	return _get_response_body(result)
+
+func get_artist(artist_id: String) -> Dictionary:
+	var result := await _execute_request("%s/artists/%s" % [base_url, artist_id], HTTPClient.METHOD_GET)
 	return _get_response_body(result)
 
 func _execute_request(url: String, method: int = 0, body: String = "") -> Array:
