@@ -35,9 +35,13 @@ Alternatively, instead of using the auth scene, you can call the `set_credential
 ## Use
 You can use this addon by adding a SpotifyNode node to your scene. Make sure you only have one active SpotifyNode in your program at any time, to prevent unexpected behaviour.
 Use the functions of the SpotifyNode to perform actions like adding items to the queue, starting/pauzing playback, etc. You can specify the device on which to trigger the action, or leave it empty to trigger the action on the active device. Spotify needs to be open on at least one device for the actions to work (you can't launch the spotify player remotely through the API).
-To start tracking Spotify playback progress, call the start_tracking_playback_state function of the SpotifyNode. You can connect to the signals of the SpotifyNode to get called with track progress updates, pause events and track change events. 
+To start tracking Spotify playback progress, call the `start_tracking_playback_state` function of the SpotifyNode. You can connect to the signals of the SpotifyNode to get called with track progress updates, pause events and track change events. 
 ![adding_spotifynode](./documentation/adding_spotifynode.png)
 See the music_player scene in the example folder for an example of how to use the SpotifyNode functionalities.
+
+## Example
+In the example folder, you can find a simple Spotify music player implemented in Godot. The `music_player.gd` script provides a practical example on how to use the functionalities of SpotifyNode.
+![spotify_node_example](./documentation/spotify_node_example.png)
 
 ## License
 This project is released under the MIT license by MathrimC (2024)
