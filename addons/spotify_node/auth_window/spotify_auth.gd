@@ -6,7 +6,7 @@ enum { INACTIVE, LISTENING }
 const redirect_bind_address := "127.0.0.1"
 const filled_field_text := "ThisIsAFakeTokenForATextField!!!"
 
-const redirect_uri: String = "http://localhost"
+const redirect_uri: String = "http://127.0.0.1"
 const redirect_port: int = 7346
 const help_texts := {
 	SpotifyNode.AuthType.AUTH_CODE: "* Create an application in the [url=https://developer.spotify.com/dashboard]Spotify Developer Dashboard[/url] and copy the Client ID and Client Secret to the fields above. Make sure the OAuth Redirect URL is set to http://localhost:7346",
@@ -201,5 +201,5 @@ func _get_redirect_page(response_code: int) -> String:
 		path = "res://addons/spotify_node/auth_window/redirectpage-failed.html"
 	var page := FileAccess.get_file_as_string(path)
 	if page == "":
-		printerr("error retrieving redirect page")
+		printerr("error retrieving redirect page for %s" % response_code)
 	return page

@@ -17,7 +17,7 @@ Clone the project or download the zip file. Copy the files and folders to your p
 ## Getting started
 The easiest way to get started is to use the provided auth window scene:
 
-1) Register a new application in the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard). If you want to use the SpotifyNode auth scene, make sure you set the Redirect URI to http://localhost:7346
+1) Register a new application in the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard). If you want to use the SpotifyNode auth scene, make sure you set the Redirect URI to http://127.0.0.1:7346
 2) Run the auth window scene (`addons/spotify_node/auth_window/spotify_auth_window.tscn`)
 ![spotify_auth_window](./documentation/spotify_node_auth_window.png)
 3) Choose the Authorization Grant Type:
