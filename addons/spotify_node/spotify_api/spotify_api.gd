@@ -175,6 +175,10 @@ func get_artist(artist_id: String) -> Dictionary:
 	var result := await _execute_request("%s/artists/%s" % [base_url, artist_id], HTTPClient.METHOD_GET)
 	return _get_response_body(result)
 
+func get_track(track_id: String) -> Dictionary:
+	var result := await _execute_request("%s/tracks/%s" % [base_url, track_id], HTTPClient.METHOD_GET)
+	return _get_response_body(result)
+
 func _execute_request(url: String, method: int = 0, body: String = "") -> Array:
 	if auth_state == SpotifyNode.AuthState.REFRESHING && url != token_url:
 		await spotify_node.auth_state_changed

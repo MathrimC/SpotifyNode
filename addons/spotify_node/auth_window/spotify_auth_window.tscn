@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://sgiampakcaer"]
 
-[ext_resource type="Script" path="res://addons/spotify_node/auth_window/spotify_auth_window.gd" id="1_ig64g"]
-[ext_resource type="Script" path="res://addons/spotify_node/auth_window/spotify_auth.gd" id="2_6ldlh"]
+[ext_resource type="Script" uid="uid://cno5yg58ike3j" path="res://addons/spotify_node/auth_window/spotify_auth_window.gd" id="1_ig64g"]
+[ext_resource type="Script" uid="uid://crttujaqyjs65" path="res://addons/spotify_node/auth_window/spotify_auth.gd" id="2_6ldlh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hyf55"]
 
@@ -61,6 +61,7 @@ selected = 1
 fit_to_longest_item = false
 item_count = 2
 popup/item_0/text = "Auth code"
+popup/item_0/id = 0
 popup/item_1/text = "Auth code PKCE"
 popup/item_1/id = 1
 

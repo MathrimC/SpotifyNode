@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://cb15liyt827ov"]
 
-[ext_resource type="Script" path="res://example/music_player.gd" id="1_h1v1n"]
-[ext_resource type="Script" path="res://addons/spotify_node/spotify_node.gd" id="2_nesis"]
+[ext_resource type="Script" uid="uid://c505uig3cib5g" path="res://example/music_player.gd" id="1_h1v1n"]
+[ext_resource type="Script" uid="uid://hkf6n6b6yrj5" path="res://addons/spotify_node/spotify_node.gd" id="2_nesis"]
 [ext_resource type="Texture2D" uid="uid://bg8g33ta1bhdv" path="res://example/Full_Logo_Green_RGB.svg" id="3_vw0yt"]
 
 [node name="MusicPlayer" type="Control"]

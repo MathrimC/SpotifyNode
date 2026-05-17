@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c18a334we3bia"]
 
-[ext_resource type="Script" path="res://example/search_result.gd" id="1_8pobu"]
+[ext_resource type="Script" uid="uid://ddslntg8tonaf" path="res://example/search_result.gd" id="1_8pobu"]
 
 [node name="SearchResult" type="HBoxContainer" node_paths=PackedStringArray("label")]
 clip_contents = true

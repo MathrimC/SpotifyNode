@@ -92,12 +92,21 @@ func add_item_to_queue_by_search(search_query: String, item_type: ItemType = Ite
 	if search_query == "":
 		printerr("Can't add item to queue based on empty search query")
 		return {}
-	var search_results := await _spotify_api.search(search_query, [item_type], 1)
-	var type_str: String = ItemType.keys()[item_type]
-	type_str = type_str.to_lower() + "s"
-	var uri: String = search_results[type_str]["items"][0]["uri"]
-	if await _spotify_api.add_item_to_queue(uri):
-		return search_results[type_str]["items"][0]
+	var item_info: Dictionary
+	# TODO: add ID detection for other item types
+	if search_query.begins_with("https://open.spotify.com/track/"):
+		var track_id := search_query.trim_prefix("https://open.spotify.com/track/").split("?si")[0]
+		item_info = await _spotify_api.get_track(track_id)
+		if item_info.has("error"):
+			printerr("Adding song to queue failed: song with ID %s not found" % track_id)
+			return {}
+	else:
+		var search_results := await _spotify_api.search(search_query, [item_type], 1)
+		var type_str: String = ItemType.keys()[item_type]
+		type_str = type_str.to_lower() + "s"
+		item_info = search_results[type_str]["items"][0]
+	if await _spotify_api.add_item_to_queue(item_info["uri"]):
+		return item_info
 	else:
 		printerr("Adding item to queue failed. There is probably no active spotify session.")
 		return {}
@@ -149,6 +158,9 @@ func search(query: String, types: Array[SpotifyNode.ItemType]) -> Dictionary:
 
 func get_artist(artist_id: String) -> Dictionary:
 	return await _spotify_api.get_artist(artist_id)
+
+func get_track(track_id: String) -> Dictionary:
+	return await _spotify_api.get_track(track_id)
 
 func _update_playback_state(new_state: Dictionary) -> void:
 	var previous_state := playback_state
