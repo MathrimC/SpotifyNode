@@ -23,7 +23,7 @@ var playback_state: Dictionary
 var user_id: String
 var _spotify_api: SpotifyAPI
 
-func _ready() -> void:
+func _enter_tree() -> void:
 	playback_state = {"is_playing": false, "item": {"id": ""}}
 	_spotify_api = SpotifyAPI.new()
 	_spotify_api.spotify_node = self
